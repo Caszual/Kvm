@@ -95,9 +95,11 @@ pub const Kvm = struct {
     karel: Karel = undefined,
     city: City = undefined,
 
+    // see kvm-bytecode.zig for explanation
     bytecode: std.ArrayList(u8),
     symbol_map: std.StringHashMap(bytec.Func),
 
+    // represents the function call (and repeat) stack (for retn)
     func_stack: std.ArrayList(bytec.Func),
     repeat_stack: std.ArrayList(u16),
 
@@ -126,6 +128,7 @@ pub const Kvm = struct {
         self.bytecode.clearRetainingCapacity();
         self.symbol_map.clearRetainingCapacity();
 
+        // example bytecode, karel will loop around the map about ~32k times (128 << 4 times)
         try self.bytecode.appendSlice(&[_]u8{
             @intFromEnum(bytec.KvmOpCode.branch) | @intFromEnum(bytec.KvmOpCodeCond.is_wall) << 4,
             0x00,
@@ -149,6 +152,7 @@ pub const Kvm = struct {
             @intFromEnum(bytec.KvmOpCode.retn),
         });
 
+        // make the bytecode a function with a name
         try self.symbol_map.put("test", 0x00000000);
 
         self.karel = Karel{
@@ -159,6 +163,7 @@ pub const Kvm = struct {
             .dir = 3,
         };
 
+        // clear map
         self.city = City{ .storage = undefined };
         @memset(&self.city.storage, 0);
     }

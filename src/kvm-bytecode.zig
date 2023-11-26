@@ -20,6 +20,13 @@ pub const KvmOpCode = enum(u4) {
 // if         | branch to else body and branch at end of non-else body
 // [user_func]| branch_linked and retn
 
+// an KvmOpCode byte format:
+// 1|001|0010
+//
+// 1. invert bit (inverts condition, is -> is not)
+// 2. KvmOpCodeCond (specifies condition, only for branch and branch_linked)
+// 3. KvmOpCode (spicifies instruction)
+
 // KvmOpCodeCond defines the condition for conditional ops like until and if
 // KvmOpCode and KvmOpCodeCond are always packed into a single u8
 pub const KvmOpCodeCond = enum(u8) {
@@ -33,7 +40,10 @@ pub const KvmOpCodeCond = enum(u8) {
     is_west,
 };
 
+// practically an address in bytecode, used for jumping
 pub const Func = u32;
+
+// string, used for looking up symbol names and converting them to Funcs
 pub const Symbol = []const u8;
 
 pub fn get_repeat_index(func_bytecode: []const u8) u16 {

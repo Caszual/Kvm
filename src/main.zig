@@ -3,6 +3,9 @@ const kvm = @import("kvm.zig");
 
 const builtin = @import("builtin");
 
+// compile with -Doptimize=Debug for execution status
+// compile with -Doptimize=ReleaseFast for speed
+
 pub const std_options = struct {
     pub const log_level = switch (builtin.mode) {
         .Debug => .debug,
