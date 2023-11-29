@@ -19,7 +19,7 @@ pub fn main() !void {
 
     var startTime = std.time.nanoTimestamp();
 
-    var vm = kvm.Kvm.init(std.heap.page_allocator, "test.kl") catch |err| {
+    var vm = kvm.Kvm.init(std.heap.page_allocator, "KPUutf8.kl") catch |err| {
         std.log.err("Kvm Failed to Initialize, error: {}", .{err});
         return;
     };
@@ -31,14 +31,14 @@ pub fn main() !void {
 
     startTime = std.time.nanoTimestamp();
 
-    vm.run_symbol("test") catch |err| {
+    const func_count = vm.run_symbol("TEST") catch |err| {
         std.log.err("An error occurred while executing Karel's code! error: {}", .{err});
         return;
     };
 
     if ((std.time.nanoTimestamp() - startTime) < 1_000_000) {
-        std.log.info("Karel's execution has finished in {d:.3} us!", .{@as(f32, @floatFromInt(std.time.nanoTimestamp() - startTime)) * 0.001});
+        std.log.info("Karel's execution of {} funcs has finished in {d:.3} us!", .{ func_count, @as(f32, @floatFromInt(std.time.nanoTimestamp() - startTime)) * 0.001 });
     } else {
-        std.log.info("Karel's execution has finished in {d:.3} ms!", .{@as(f32, @floatFromInt(std.time.nanoTimestamp() - startTime)) * 0.000001});
+        std.log.info("Karel's execution of {} funcs has finished in {d:.3} ms!", .{ func_count, @as(f32, @floatFromInt(std.time.nanoTimestamp() - startTime)) * 0.000001 });
     }
 }

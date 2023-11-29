@@ -8,8 +8,8 @@ pub const KvmOpCode = enum(u4) {
     pick_up,
     place,
     repeat, // trailing u16 and Func
-    branch, // trailing KvmOpCodeCond and Func
-    branch_linked, // trailing KvmOpCodeCond and Func
+    branch, // trailing KvmCondition and Func
+    branch_linked, // trailing KvmCondition and Func
     retn,
     stop,
 };
@@ -24,12 +24,12 @@ pub const KvmOpCode = enum(u4) {
 // 1|001|0010
 //
 // 1. invert bit (inverts condition, is -> is not)
-// 2. KvmOpCodeCond (specifies condition, only for branch and branch_linked)
+// 2. KvmCondition (specifies condition, only for branch and branch_linked)
 // 3. KvmOpCode (spicifies instruction)
 
-// KvmOpCodeCond defines the condition for conditional ops like until and if
-// KvmOpCode and KvmOpCodeCond are always packed into a single u8
-pub const KvmOpCodeCond = enum(u8) {
+// KvmCondition defines the condition for conditional ops like until and if
+// KvmOpCode and KvmCondition are always packed into a single u8
+pub const KvmCondition = enum(u3) {
     always = 0, // no condition
     is_wall,
     is_flag,
@@ -40,6 +40,12 @@ pub const KvmOpCodeCond = enum(u8) {
     is_west,
 };
 
+pub const KvmByte = packed struct {
+    opcode: KvmOpCode,
+    condcode: KvmCondition = .always,
+    cond_inverse: bool = false,
+};
+
 // practically an address in bytecode, used for jumping
 pub const Func = u32;
 
@@ -47,28 +53,18 @@ pub const Func = u32;
 pub const Symbol = []const u8;
 
 pub fn get_repeat_index(func_bytecode: []const u8) u16 {
-    return func_bytecode[2] | @as(u16, func_bytecode[1]) << 8;
+    return func_bytecode[1] | @as(u16, func_bytecode[2]) << 8;
 }
 
 pub fn get_repeat_func(func_bytecode: []const u8) Func {
-    return func_bytecode[6] | @as(u32, func_bytecode[5]) << 8 | @as(u32, func_bytecode[4]) << 16 | @as(u32, func_bytecode[3]) << 24;
+    return func_bytecode[3] | @as(u32, func_bytecode[4]) << 8 | @as(u32, func_bytecode[5]) << 16 | @as(u32, func_bytecode[6]) << 24;
 }
 
 pub fn get_branch_func(func_bytecode: []const u8) Func {
-    return func_bytecode[4] | @as(u32, func_bytecode[3]) << 8 | @as(u32, func_bytecode[2]) << 16 | @as(u32, func_bytecode[1]) << 24;
+    return func_bytecode[1] | @as(u32, func_bytecode[2]) << 8 | @as(u32, func_bytecode[3]) << 16 | @as(u32, func_bytecode[4]) << 24;
 }
 
-// transpiling
-
-// compiles karel-lang to in-memory karel-lang
-pub fn compile(bytecode: *std.ArrayList(u8), symbol_map: *std.StringHashMap(Func), kcode: []const u8) !void {
-    _ = kcode;
-    _ = symbol_map;
-    _ = bytecode;
-}
-
-// compiles in-memory bytecode to karel-lang
-pub fn decompile(bytecode: []const u8, symbol_map: std.StringHashMap(Func)) !std.ArrayList(u8) {
-    _ = symbol_map;
-    _ = bytecode;
+test "Bytecode Format" {
+    try std.testing.expect(@sizeOf(KvmByte) == 1);
+    try std.testing.expect(@bitSizeOf(KvmByte) == 8);
 }
