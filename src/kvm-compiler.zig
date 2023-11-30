@@ -148,12 +148,6 @@ pub fn compile(reader: anytype, allocator: std.mem.Allocator, bytecode: *std.Arr
         if (sym) |sym_func| {
             // write symbols func
 
-            if (sym_func != 0x1) {
-                std.log.debug("resolving sym: \"{s}\" as func: 0x{x}", .{ entry.key_ptr.*, sym_func });
-            } else {
-                std.log.debug("resolving sym: \"{s}\" as noop-func", .{entry.key_ptr.*});
-            }
-
             for (entry.value_ptr.items) |unresolved_func| {
                 @memcpy(context.bytecode.items[unresolved_func .. unresolved_func + 4], std.mem.asBytes(&sym_func));
             }
@@ -161,12 +155,12 @@ pub fn compile(reader: anytype, allocator: std.mem.Allocator, bytecode: *std.Arr
             // write noop func
             const noop_func: u32 = 0x01;
 
-            std.log.debug("resolving sym: \"{s}\" as noop-func", .{entry.key_ptr.*});
-
             for (entry.value_ptr.items) |unresolved_func| {
                 @memcpy(context.bytecode.items[unresolved_func .. unresolved_func + 4], std.mem.asBytes(&noop_func));
             }
         }
+
+        std.log.debug("resolving sym: \"{s}\" as func: 0x{x}", .{ entry.key_ptr.*, sym orelse 0x1 });
     }
 
     std.log.info("Kvm bytecode compilation finished successfully!", .{});
@@ -212,19 +206,22 @@ fn compileScope(reader: anytype, context: *BytecodeContext) !void {
             // compile loop body
             try compileScope(reader, context);
 
-            try context.bytecode.append(@bitCast(bc.KvmByte{ .opcode = .repeat })); // repeat opcode
-            try context.bytecode.appendSlice(std.mem.asBytes(&repeat_count)); // repeat trailing count
-            try context.bytecode.appendSlice(std.mem.asBytes(&repeat_begin_func)); // repeat trailing func
+            try context.bytecode.ensureUnusedCapacity(@sizeOf(bc.KvmByte) + @sizeOf(@TypeOf(repeat_count)) + @sizeOf(bc.Func));
+
+            context.bytecode.appendAssumeCapacity(@bitCast(bc.KvmByte{ .opcode = .repeat })); // repeat opcode
+            context.bytecode.appendSliceAssumeCapacity(std.mem.asBytes(&repeat_count)); // repeat trailing count
+            context.bytecode.appendSliceAssumeCapacity(std.mem.asBytes(&repeat_begin_func)); // repeat trailing func
 
             std.log.debug("  0x{x}: repeat; count {}; begin func 0x{x}", .{ context.bytecode.items.len - 7, repeat_count, repeat_begin_func });
             std.log.debug("  (repeat end)", .{});
         } else if (std.mem.startsWith(u8, l, "UNTIL")) {
             const cond = try compileCondition(std.mem.trimLeft(u8, l, "UNTIL"));
 
-            try context.bytecode.append(@bitCast(bc.KvmByte{ .opcode = .branch, .condcode = cond.cond, .cond_inverse = !cond.inverse })); // first branch (not part of the loop, only checks the first time if the condition is already true and skips the loop)
+            try context.bytecode.ensureUnusedCapacity(@sizeOf(bc.KvmByte) + @sizeOf(bc.Func));
+            context.bytecode.appendAssumeCapacity(@bitCast(bc.KvmByte{ .opcode = .branch, .condcode = cond.cond, .cond_inverse = !cond.inverse })); // first branch (not part of the loop, only checks the first time if the condition is already true and skips the loop)
 
             const until_end_func_ptr: bc.Func = @intCast(context.bytecode.items.len);
-            try context.bytecode.appendNTimes(undefined, @sizeOf(bc.Func)); // allocate null func (resolved after loop body is compiled)
+            context.bytecode.appendNTimesAssumeCapacity(undefined, @sizeOf(bc.Func)); // allocate null func (resolved after loop body is compiled)
 
             // func to start of loop
             const until_begin_func: bc.Func = @intCast(context.bytecode.items.len);
@@ -233,8 +230,10 @@ fn compileScope(reader: anytype, context: *BytecodeContext) !void {
 
             try compileScope(reader, context);
 
-            try context.bytecode.append(@bitCast(bc.KvmByte{ .opcode = .branch, .condcode = cond.cond, .cond_inverse = cond.inverse })); // main branch (that actually loops the loop)
-            try context.bytecode.appendSlice(std.mem.asBytes(&until_begin_func));
+            try context.bytecode.ensureUnusedCapacity(@sizeOf(bc.KvmByte) + @sizeOf(bc.Func));
+
+            context.bytecode.appendAssumeCapacity(@bitCast(bc.KvmByte{ .opcode = .branch, .condcode = cond.cond, .cond_inverse = cond.inverse })); // main branch (that actually loops the loop)
+            context.bytecode.appendSliceAssumeCapacity(std.mem.asBytes(&until_begin_func));
 
             std.log.debug("  0x{x}: until; cond: {} (inverse: {}); begin func: 0x{x}", .{ context.bytecode.items.len - 5, cond.cond, cond.inverse, until_begin_func });
             std.log.debug("  (until end)", .{});
@@ -249,10 +248,11 @@ fn compileScope(reader: anytype, context: *BytecodeContext) !void {
 
             const cond = try compileCondition(std.mem.trimLeft(u8, l, "IF"));
 
-            try context.bytecode.append(@bitCast(bc.KvmByte{ .opcode = .branch, .condcode = cond.cond, .cond_inverse = !cond.inverse }));
+            try context.bytecode.ensureUnusedCapacity(@sizeOf(bc.KvmByte) + @sizeOf(bc.Func));
+            context.bytecode.appendAssumeCapacity(@bitCast(bc.KvmByte{ .opcode = .branch, .condcode = cond.cond, .cond_inverse = !cond.inverse }));
 
             const else_begin_func_ptr: bc.Func = @intCast(context.bytecode.items.len);
-            try context.bytecode.appendNTimes(undefined, @sizeOf(bc.Func)); // allocate null func (resolved after the if body is compiled)
+            context.bytecode.appendNTimesAssumeCapacity(undefined, @sizeOf(bc.Func)); // allocate null func (resolved after the if body is compiled)
 
             std.log.debug("  0x{x}: if; cond: {} (inverse: {})", .{ context.bytecode.items.len - 5, cond.cond, cond.inverse });
 
@@ -260,10 +260,11 @@ fn compileScope(reader: anytype, context: *BytecodeContext) !void {
 
             try compileScope(reader, context); // compile if body
 
-            try context.bytecode.append(@bitCast(bc.KvmByte{ .opcode = .branch }));
+            try context.bytecode.ensureUnusedCapacity(@sizeOf(bc.KvmByte) + @sizeOf(bc.Func));
+            context.bytecode.appendAssumeCapacity(@bitCast(bc.KvmByte{ .opcode = .branch }));
 
             const if_end_func_ptr: bc.Func = @intCast(context.bytecode.items.len);
-            try context.bytecode.appendNTimes(undefined, @sizeOf(bc.Func));
+            context.bytecode.appendNTimesAssumeCapacity(undefined, @sizeOf(bc.Func));
 
             std.log.debug("  0x{x}: if out", .{context.bytecode.items.len - 5});
 
@@ -285,7 +286,8 @@ fn compileScope(reader: anytype, context: *BytecodeContext) !void {
         } else if (std.mem.startsWith(u8, l, "END")) {
             return; // end current scope (retn opcode only at the end of the symbol scope; inserted by top level scope compile)
         } else { // symbol call
-            try context.bytecode.append(@bitCast(bc.KvmByte{ .opcode = .branch_linked }));
+            try context.bytecode.ensureUnusedCapacity(@sizeOf(bc.KvmByte) + @sizeOf(bc.Func));
+            context.bytecode.appendAssumeCapacity(@bitCast(bc.KvmByte{ .opcode = .branch_linked }));
 
             // try looking up if symbol is already defined
             const symbol: ?bc.Func = context.symbol_map.get(l);
@@ -293,14 +295,14 @@ fn compileScope(reader: anytype, context: *BytecodeContext) !void {
             if (symbol) |sym| {
                 // symbol found!
 
-                try context.bytecode.appendSlice(std.mem.asBytes(&sym)); // append trailing func
+                context.bytecode.appendSliceAssumeCapacity(std.mem.asBytes(&sym)); // append trailing func
 
                 std.log.debug("  0x{x}: branch-linked; sym: \"{s}\" func: 0x{x}", .{ context.bytecode.items.len - 5, l, sym });
             } else {
                 // symbol not found
 
                 const unresolved_func_func: bc.Func = @intCast(context.bytecode.items.len);
-                try context.bytecode.appendSlice(&[4]u8{ 0, 0, 0, 0 }); // allocate null func until symbol is resolved
+                context.bytecode.appendNTimesAssumeCapacity(undefined, @sizeOf(bc.Func)); // allocate null func until symbol is resolved
 
                 // clone symbol name
                 const lc = try context.allocator.alloc(u8, l.len);

@@ -1,15 +1,4946 @@
-TEST
-    REPEAT 10-TIMES
-        LEFT
-        TEST2
-    END
-END   
+==BOOT==
+   ROOT-ALIGN
+   __MAIN__
+END
 
-TEST2    
-    REPEAT 100-TIMES
-        UNTIL  ISNOT   WALL       
-            STEP
-        END
-        LEFT
-    END
+ROOT-ALIGN
+   UNTIL ISNOT NORTH
+      LEFT
+   END
+   UNTIL ISNOT WALL
+      STEP
+   END
+   LEFT
+   UNTIL ISNOT HOME
+      IF IS WALL
+         LEFT
+         LEFT
+      END, ELSE
+      END
+      STEP
+   END
+   UNTIL ISNOT SOUTH
+      LEFT
+   END
+END
+
+__MAIN__
+   // EAST = HALT KPU
+   UNTIL ISNOT EAST
+      __FETCH__
+   END
+END
+
+// EAST = HALT KPU
+END
+
+__FETCH__
+END
+
+FAULT-ALIGN
+   UNTIL ISNOT EAST
+      LEFT
+   END
+   UNTIL ISNOT WALL
+      STEP
+   END
+   LEFT
+   UNTIL ISNOT WALL
+      STEP
+   END
+END
+
+__DRE__
+   // DECODE, RESTORE, EXECUTE COMBINED FUNCTION
+   UNTIL ISNOT NORTH
+      LEFT
+   END
+   // START OF THE INSTRUCTION IF BLOCK
+   IF ISNOT FLAG
+      __DRE-GID-0-MEMORY__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-1-ARITHMETIC__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-2__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-3__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-4__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-5__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-6__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-7__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-8__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+// DECODE, RESTORE, EXECUTE COMBINED FUNCTION
+END
+
+// START OF THE INSTRUCTION IF BLOCK
+END
+
+__DRE-GID-0-MEMORY__
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-0-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-0-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-0-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-0-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-0-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-0-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-0-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-0-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-0-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-ARITHMETIC__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-1-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-1-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-1-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-1-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-1-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-1-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-1-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-1-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-1-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-2-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-2-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-2-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-2-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-2-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-2-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-2-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-2-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-2-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-3-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-3-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-3-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-3-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-3-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-3-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-3-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-3-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-3-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-4-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-4-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-4-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-4-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-4-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-4-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-4-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-4-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-4-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-5-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-5-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-5-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-5-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-5-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-5-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-5-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-5-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-5-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-6-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-6-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-6-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-6-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-6-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-6-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-6-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-6-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-6-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-7-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-7-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-7-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-7-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-7-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-7-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-7-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-7-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-7-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __DRE-GID-8-IID-0-8__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __DRE-GID-8-IID-9-17__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __DRE-GID-8-IID-18-26__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __DRE-GID-8-IID-27-35__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __DRE-GID-8-IID-36-44__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __DRE-GID-8-IID-45-53__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __DRE-GID-8-IID-54-62__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __DRE-GID-8-IID-63-71__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __DRE-GID-8-IID-72-80__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__FAULT-UNKNOWN-INSTRUCTION__
+   FAULT-ALIGN
+   UNTIL IS FLAG
+      PICK
+   END
+   STOP
+END
+
+__DRE-GID-0-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-0-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+// RESTORE INSTRUCTION KAT
+END
+
+__DRE-GID-1-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-1-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-2-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-3-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-4-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-5-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-6-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-7-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-0-8__
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-9-17__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-18-26__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 2-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-27-35__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 3-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-36-44__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 4-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-45-53__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 5-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-54-62__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 6-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-63-71__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 7-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+__DRE-GID-8-IID-72-80__
+   // RESTORE INSTRUCTION KAT
+   REPEAT 8-TIMES
+      PLACE
+   END
+   STEP
+   IF ISNOT FLAG
+      __FAULT-UNKNOWN-INSTRUCTION__
+   END, ELSE
+      PICK
+      IF ISNOT FLAG
+         __FAULT-UNKNOWN-INSTRUCTION__
+      END, ELSE
+         PICK
+         IF ISNOT FLAG
+            __FAULT-UNKNOWN-INSTRUCTION__
+         END, ELSE
+            PICK
+            IF ISNOT FLAG
+               __FAULT-UNKNOWN-INSTRUCTION__
+            END, ELSE
+               PICK
+               IF ISNOT FLAG
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               END, ELSE
+                  PICK
+                  IF ISNOT FLAG
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  END, ELSE
+                     PICK
+                     IF ISNOT FLAG
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     END, ELSE
+                        PICK
+                        IF ISNOT FLAG
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        END, ELSE
+                           PICK
+                           IF ISNOT FLAG
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END, ELSE
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           END
+                        END
+                     END
+                  END
+               END
+            END
+         END
+      END
+   END
+END
+
+NOVÝ PŘÍKAZ
+END
+
+__ADD__
+END
+
+__ADD__<R0, R0>
+   // RESTORE INSTRUCTION KAT
+   REPEAT 1-TIMES
+      PLACE
+   END
+   ROOT-ALIGN
+   LEFT
+   INCREMENT
+END
+
+INCREMENT
+END
+
+COPY-FETCH<R0, OP1>
+END
+
+COPY-FETCH
+END
+
+INC-AND-CARRY
+   INVERT-KAT
+   IF IS FLAG
+      PICK
+   END, ELSE
+      STEP
+      INC2-AND-CARRY
+      REPEAT 2-TIMES
+         LEFT
+      END
+      STEP
+      REPEAT 2-TIMES
+         LEFT
+      END
+      FILL
+   END
+   INVERT-KAT
+END
+
+INVERT-KAT
+   IF IS FLAG
+      PICK
+      INVERT-KAT
+      PICK
+   END, ELSE
+      FILL
+   END
+END
+
+FILL
+   REPEAT 8-TIMES
+      PLACE
+   END
+END
+
+INC2-AND-CARRY
+   INVERT-KAT
+   IF IS FLAG
+      PICK
+   END, ELSE
+      STEP
+      INC3-AND-IGNORE
+      REPEAT 2-TIMES
+         LEFT
+      END
+      STEP
+      REPEAT 2-TIMES
+         LEFT
+      END
+      FILL
+   END
+   INVERT-KAT
+END
+
+INC3-AND-IGNORE
+   INVERT-KAT
+   IF IS FLAG
+      PICK
+   END, ELSE
+      FILL
+   END
+   INVERT-KAT
+END
+
+TEST
+   UNTIL ISNOT HOME
+      INC-AND-CARRY
+   END
 END

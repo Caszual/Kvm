@@ -67,22 +67,13 @@ const City = struct {
     pub fn get_square(self: *const City, x: u32, y: u32) u4 {
         const data = self.storage[(x + y * map_size) / 2];
 
-        // if x is odd
-        if (x & 0x01 == 0) {
-            return data.s1;
-        }
-
-        return data.s2;
+        return if (x % 2 == 0) data.s1 else data.s2;
     }
 
     pub fn set_square(self: *City, x: u32, y: u32, data: u4) void {
         const stored_data: *CityByte = &self.storage[(x + y * map_size) / 2];
 
-        if (x & 0x01 == 0) {
-            stored_data.s1 = data;
-        } else {
-            stored_data.s2 = data;
-        }
+        if (x % 2 == 0) stored_data.s1 = data else stored_data.s2 = data;
     }
 };
 
@@ -90,6 +81,9 @@ const LookupSymbolError = error{SymbolNotFound};
 const RunFuncError = error{ StepOutOfBounds, PickupZeroFlags, PlaceMaxFlags, StopEncoutered };
 
 pub const Kvm = struct {
+    // Kvm is tuned for fast and efficient execution until you reach this max function depth limit, where it falls back to allocating more stack at runtime
+    pub const maxFastDepth = 512;
+
     allocator: std.mem.Allocator,
 
     karel: Karel = undefined,
@@ -99,17 +93,11 @@ pub const Kvm = struct {
     bcode: std.ArrayList(u8),
     symbol_map: std.StringHashMap(bc.Func),
 
-    // represents the function call (and repeat) stack (for retn)
-    func_stack: std.ArrayList(bc.Func),
-    repeat_stack: std.ArrayList(u16),
-
     pub fn init(allocator: std.mem.Allocator, path: []const u8) !Kvm {
         var vm = Kvm{
             .allocator = allocator,
             .bcode = std.ArrayList(u8).init(allocator),
             .symbol_map = std.StringHashMap(bc.Func).init(allocator),
-            .func_stack = std.ArrayList(bc.Func).init(allocator),
-            .repeat_stack = std.ArrayList(u16).init(allocator),
         };
 
         try vm.load(path);
@@ -129,9 +117,6 @@ pub const Kvm = struct {
         //
         //    self.symbol_map.deinit();
         //}
-
-        self.func_stack.deinit();
-        self.repeat_stack.deinit();
     }
 
     pub fn load(self: *Kvm, path: []const u8) !void {
@@ -189,20 +174,35 @@ pub const Kvm = struct {
     // funcs
 
     fn run_func(self: *Kvm, func_entry: bc.Func) !u64 {
-        var func: bc.Func = func_entry;
+        // ordered from cold to hot vars
+
+        // represents the function call (and repeat) stack for retn (and repeat stacks)
+        var func_stack: std.ArrayList(bc.Func) = std.ArrayList(bc.Func).init(self.allocator);
+        var repeat_stack: std.ArrayList(u16) = std.ArrayList(u16).init(self.allocator);
+
+        defer func_stack.deinit();
+        defer repeat_stack.deinit();
+
+        // prealloc stack to avoid allocations bellow maxFastDepth
+        try func_stack.ensureTotalCapacity(Kvm.maxFastDepth);
+        try repeat_stack.ensureTotalCapacity(Kvm.maxFastDepth);
 
         var repeat_state: ?u16 = null;
         var repeat_origin: ?bc.Func = null;
 
         var func_count: u64 = 0;
 
-        self.func_stack.clearRetainingCapacity();
-        self.repeat_stack.clearRetainingCapacity();
+        // essentially Karel's program counter
+        var func: bc.Func = func_entry;
 
+        var func_depth: u32 = 1;
+
+        // entering hot loop
         while (true) {
             const opcode: bc.KvmByte = @bitCast(self.bcode.items[func]);
 
             func_count += 1;
+            if (func_count == 0xffffffff) return func_count;
 
             switch (opcode.opcode) {
                 bc.KvmOpCode.step => {
@@ -260,13 +260,15 @@ pub const Kvm = struct {
                         if (repeat_origin) |f| {
                             // save in-progress loop onto the stack
 
-                            try self.func_stack.append(f);
-                            try self.repeat_stack.append(repeat_state.?);
+                            func_stack.appendAssumeCapacity(f);
+                            repeat_stack.appendAssumeCapacity(repeat_state.?);
                         }
 
                         // setup a new loop
                         repeat_origin = func;
                         repeat_state = bc.get_repeat_index(self.bcode.items[func .. func + 7]);
+
+                        func_depth += 1;
                     }
 
                     // repeat instruction is at the *bottom* of the loop (pointing to the top)
@@ -275,11 +277,11 @@ pub const Kvm = struct {
                     if (repeat_state == 0) {
                         // finished loop
 
-                        if (self.repeat_stack.items.len != 0) {
+                        if (repeat_stack.items.len != 0) {
                             // resume loop from stack
 
-                            repeat_origin = self.func_stack.pop();
-                            repeat_state = self.repeat_stack.pop();
+                            repeat_origin = func_stack.pop();
+                            repeat_state = repeat_stack.pop();
                         } else {
                             // all in-progress loops done
 
@@ -288,6 +290,7 @@ pub const Kvm = struct {
                         }
 
                         func += 7;
+                        func_depth -= 1;
 
                         std.log.debug("repeat: finished", .{});
                     } else {
@@ -327,14 +330,18 @@ pub const Kvm = struct {
 
                     const br_func = bc.get_branch_func(self.bcode.items[func .. func + 5]);
 
-                    try self.func_stack.append(func + 5);
+                    func_stack.appendAssumeCapacity(func + 5);
                     func = br_func;
+
+                    func_depth += 1;
 
                     std.log.debug("branch_linked: 0x{x}", .{br_func});
                 },
 
                 bc.KvmOpCode.retn => {
-                    const ret_func: ?bc.Func = self.func_stack.popOrNull();
+                    const ret_func: ?bc.Func = func_stack.popOrNull();
+
+                    func_depth -= 1;
 
                     if (ret_func) |f| {
                         func = f; // return from linked call
@@ -350,6 +357,9 @@ pub const Kvm = struct {
                     return RunFuncError.StopEncoutered;
                 },
             }
+
+            // fallback runtime allocation when the maxFastDepth is reached, *will* affect performance
+            if (func_depth > Kvm.maxFastDepth) try fallbackAllocations(&func_stack, &repeat_stack);
         }
 
         unreachable;
@@ -357,16 +367,13 @@ pub const Kvm = struct {
 
     // test if a condition is true
     fn test_cond(self: *const Kvm, opcode: bc.KvmByte) bool {
-        if (opcode.condcode == .always) return true;
-
-        // std.debug.print("cond: 0x{x} {}\n", .{ opcode.condcode, opcode.cond_inverse });
-
         var result: bool = undefined;
+
         switch (opcode.condcode) {
             bc.KvmCondition.is_wall => {
                 const step = self.karel.get_step(City.map_size);
 
-                result = if (step == null) true else if (self.city.get_square(step.?.x, step.?.y) == 9) true else false;
+                result = if (step) |s| self.city.get_square(s.x, s.y) == 9 else false;
             },
 
             bc.KvmCondition.is_flag => {
@@ -393,10 +400,19 @@ pub const Kvm = struct {
                 result = self.karel.dir == 3;
             },
 
-            else => unreachable,
+            bc.KvmCondition.none => {
+                result = true;
+            },
         }
 
-        return if (opcode.cond_inverse) !result else result;
+        return result != opcode.cond_inverse; // effectivelly a xor
+    }
+
+    fn fallbackAllocations(fstack: *std.ArrayList(bc.Func), rstack: *std.ArrayList(u16)) !void {
+        @setCold(true); // tell the optimizer to banish this function from being chosen as a function that is called often
+
+        try fstack.ensureUnusedCapacity(16);
+        try rstack.ensureUnusedCapacity(16);
     }
 };
 

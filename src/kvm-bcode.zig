@@ -30,7 +30,7 @@ pub const KvmOpCode = enum(u4) {
 // KvmCondition defines the condition for conditional ops like until and if
 // KvmOpCode and KvmCondition are always packed into a single u8
 pub const KvmCondition = enum(u3) {
-    always = 0, // no condition
+    none = 0, // no condition
     is_wall,
     is_flag,
     is_home,
@@ -42,7 +42,7 @@ pub const KvmCondition = enum(u3) {
 
 pub const KvmByte = packed struct {
     opcode: KvmOpCode,
-    condcode: KvmCondition = .always,
+    condcode: KvmCondition = .none,
     cond_inverse: bool = false,
 };
 
