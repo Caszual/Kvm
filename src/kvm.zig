@@ -192,7 +192,7 @@ pub const Kvm = struct {
         var func: bc.Func = func_entry;
 
         var repeat_state: ?u16 = null;
-        var repeat_func: ?bc.Func = null;
+        var repeat_origin: ?bc.Func = null;
 
         var func_count: u64 = 0;
 
@@ -256,10 +256,8 @@ pub const Kvm = struct {
                 },
 
                 bc.KvmOpCode.repeat => {
-                    const rfunc = bc.get_repeat_func(self.bcode.items[func .. func + 7]);
-
-                    if (repeat_func != rfunc) {
-                        if (repeat_func) |f| {
+                    if (repeat_origin != func) {
+                        if (repeat_origin) |f| {
                             // save in-progress loop onto the stack
 
                             try self.func_stack.append(f);
@@ -267,14 +265,12 @@ pub const Kvm = struct {
                         }
 
                         // setup a new loop
-                        repeat_func = rfunc;
+                        repeat_origin = func;
                         repeat_state = bc.get_repeat_index(self.bcode.items[func .. func + 7]);
                     }
 
                     // repeat instruction is at the *bottom* of the loop (pointing to the top)
                     repeat_state.? -= 1;
-
-                    std.log.debug("repeat: {} 0x{x}", .{ repeat_state.?, repeat_func.? });
 
                     if (repeat_state == 0) {
                         // finished loop
@@ -282,19 +278,24 @@ pub const Kvm = struct {
                         if (self.repeat_stack.items.len != 0) {
                             // resume loop from stack
 
-                            repeat_func = self.func_stack.pop();
+                            repeat_origin = self.func_stack.pop();
                             repeat_state = self.repeat_stack.pop();
                         } else {
                             // all in-progress loops done
 
-                            repeat_func = null;
+                            repeat_origin = null;
                             repeat_state = null;
                         }
 
                         func += 7;
+
+                        std.log.debug("repeat: finished", .{});
                     } else {
                         // continue looping
-                        func = repeat_func.?;
+                        const repeat_func = bc.get_repeat_func(self.bcode.items[func .. func + 7]);
+
+                        func = repeat_func;
+                        std.log.debug("repeat: {} 0x{x}", .{ repeat_state.?, repeat_func });
                     }
                 },
 

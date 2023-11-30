@@ -23,35 +23,12 @@ const BytecodeContext = struct {
     allocator: std.mem.Allocator,
 };
 
-fn trimFromFirst(haystack: []const u8, needle: []const u8) []const u8 {
-    const index = std.mem.lastIndexOf(u8, haystack, needle);
-
-    if (index) |i| {
-        if (i == 0) return haystack;
-
-        return .{ .ptr = haystack.ptr, .len = i };
-    } else {
-        return haystack;
-    }
-}
-
-fn trimFromLast(haystack: []const u8, needle: []const u8) []const u8 {
-    const index = std.mem.indexOf(u8, haystack, needle);
-
-    if (index) |i| {
-        if (i == haystack.len - 1) return haystack;
-
-        return .{ .ptr = haystack.ptr + i + 1, .len = haystack.len - i - 1 };
-    } else {
-        return haystack;
-    }
-}
-
 fn read_line(reader: anytype, buf: []u8) ![]const u8 {
     var lr = try reader.readUntilDelimiterOrEof(buf, '\n');
 
-    if (lr != null) {
-        var l = std.mem.trimRight(u8, lr.?, ";"); // trim comments
+    if (lr) |lnt| {
+        var l = std.mem.trimRight(u8, lnt, "\r"); // remove windows only carriage return
+        // l = std.mem.trimRight(u8, l, ";"); // trim comments
         l = std.mem.trim(u8, l, " "); // trim whitespaces
 
         return l;
@@ -120,8 +97,9 @@ pub fn compile(reader: anytype, allocator: std.mem.Allocator, bytecode: *std.Arr
     while (true) {
         var lr = try reader.readUntilDelimiterOrEof(&context.buf, '\n');
 
-        if (lr != null) {
-            var l = std.mem.trimRight(u8, lr.?, ";"); // trim comments
+        if (lr) |lnt| {
+            var l = std.mem.trimRight(u8, lnt, "\r"); // remove windows only carriage return
+            // l = std.mem.trimRight(u8, l, ";"); // trim comments
             l = std.mem.trim(u8, l, " "); // trim whitespaces
 
             if (l.len == 0) continue; // empty/comment line
