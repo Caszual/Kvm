@@ -142,6 +142,14 @@ pub fn compile(reader: anytype, allocator: std.mem.Allocator, bytecode: *std.Arr
             // compile symbol scope
             try compileScope(reader, &context);
 
+            if (context.bytecode.items.len == entry.value_ptr.*) {
+                entry.value_ptr.* = 0x1; // noop-func, point symbol to the global noop-func
+
+                std.log.debug("  (optimized out no-op func)", .{});
+                std.log.debug("", .{});
+                continue;
+            }
+
             // append scope retn opcode (not appended by compileScope())
             try context.bytecode.append(@bitCast(bc.KvmByte{ .opcode = .retn }));
             std.log.debug("  0x{x}: retn", .{context.bytecode.items.len - 1});
@@ -162,7 +170,11 @@ pub fn compile(reader: anytype, allocator: std.mem.Allocator, bytecode: *std.Arr
         if (sym) |sym_func| {
             // write symbols func
 
-            std.log.debug("resolving sym: \"{s}\" as func: 0x{x}", .{ entry.key_ptr.*, sym_func });
+            if (sym_func != 0x1) {
+                std.log.debug("resolving sym: \"{s}\" as func: 0x{x}", .{ entry.key_ptr.*, sym_func });
+            } else {
+                std.log.debug("resolving sym: \"{s}\" as noop-func", .{entry.key_ptr.*});
+            }
 
             for (entry.value_ptr.items) |unresolved_func| {
                 @memcpy(context.bytecode.items[unresolved_func .. unresolved_func + 4], std.mem.asBytes(&sym_func));
@@ -174,7 +186,7 @@ pub fn compile(reader: anytype, allocator: std.mem.Allocator, bytecode: *std.Arr
             std.log.debug("resolving sym: \"{s}\" as noop-func", .{entry.key_ptr.*});
 
             for (entry.value_ptr.items) |unresolved_func| {
-                @memset(context.bytecode.items[unresolved_func .. unresolved_func + 4], noop_func);
+                @memcpy(context.bytecode.items[unresolved_func .. unresolved_func + 4], std.mem.asBytes(&noop_func));
             }
         }
     }

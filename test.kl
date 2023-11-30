@@ -1,0 +1,15 @@
+TEST
+    REPEAT 10-TIMES
+        LEFT
+        TEST2
+    END
+END   
+
+TEST2    
+    REPEAT 100-TIMES
+        UNTIL  ISNOT   WALL       
+            STEP
+        END
+        LEFT
+    END
+END

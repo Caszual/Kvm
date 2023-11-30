@@ -138,43 +138,6 @@ pub const Kvm = struct {
         self.bcode.clearRetainingCapacity();
         self.symbol_map.clearRetainingCapacity();
 
-        // example bcode, karel will loop around the map about ~32k times (128 << 4 times)
-        // equvalent to:
-        // test <- symbol name
-        //   repeat 32768-times
-        //     until is wall
-        //       step
-        //     end
-        //     left
-        //   end
-        // end
-
-        // try self.bcode.appendSlice(&[_]u8{
-        //     @bitCast(bc.KvmByte{ .opcode = .branch, .condcode = .is_wall, .cond_inverse = false }),
-        //     0x00,
-        //     0x00,
-        //     0x00,
-        //     0x0b,
-        //     @bitCast(bc.KvmByte{ .opcode = .step }),
-        //     @bitCast(bc.KvmByte{ .opcode = .branch, .condcode = .is_wall, .cond_inverse = true }), // inverse bit set
-        //     0x00,
-        //     0x00,
-        //     0x00,
-        //     0x05,
-        //     @bitCast(bc.KvmByte{ .opcode = .left }),
-        //     @bitCast(bc.KvmByte{ .opcode = .repeat }),
-        //     128,
-        //     0,
-        //     0x00,
-        //     0x00,
-        //     0x00,
-        //     0x00,
-        //     @bitCast(bc.KvmByte{ .opcode = .retn }),
-        // });
-
-        // make the bcode a function with a name
-        // try self.symbol_map.put("test", 0x00000000);
-
         try comp.compileFile(path, self.allocator, &self.bcode, &self.symbol_map);
 
         self.karel = Karel{
@@ -187,12 +150,22 @@ pub const Kvm = struct {
 
         // clear map
         self.city = City{ .storage = undefined };
-        @memset(&self.city.storage, .{ .s1 = 0, .s2 = 0 });
+
+        //@memset(&self.city.storage, .{ .s1 = 0, .s2 = 0 });
+        //
+        //const file = try std.fs.cwd().createFile(
+        //    "bcode.bin",
+        //    .{ .read = false },
+        //);
+        //defer file.close();
+        //
+        //const bytes_written = try file.writeAll(self.bcode.items);
+        //_ = bytes_written;
     }
 
     // symbols
 
-    pub fn run_symbol(self: *Kvm, symbol: bc.Symbol) !u32 {
+    pub fn run_symbol(self: *Kvm, symbol: bc.Symbol) !u64 {
         const func = self.lookup_symbol(symbol);
         if (func == null) return error.SymbolNotFound;
 
@@ -215,13 +188,13 @@ pub const Kvm = struct {
 
     // funcs
 
-    fn run_func(self: *Kvm, func_entry: bc.Func) !u32 {
+    fn run_func(self: *Kvm, func_entry: bc.Func) !u64 {
         var func: bc.Func = func_entry;
 
         var repeat_state: ?u16 = null;
         var repeat_func: ?bc.Func = null;
 
-        var func_count: u32 = 0;
+        var func_count: u64 = 0;
 
         self.func_stack.clearRetainingCapacity();
         self.repeat_stack.clearRetainingCapacity();
