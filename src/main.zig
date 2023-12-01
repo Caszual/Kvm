@@ -20,7 +20,7 @@ pub const std_options = struct {
 export fn init() callconv(.C) bool {
     std.log.info("Initializing Kvm...", .{});
 
-    if (vm_instance != null) return false;
+    if (vm_instance == null) return false;
 
     vm_instance = kvm.Kvm.init(std.heap.page_allocator) catch |err| {
         std.log.err("Kvm Failed to Initialize, error: {}", .{err});
@@ -35,7 +35,7 @@ export fn deinit() callconv(.C) void {
 }
 
 export fn load() callconv(.C) bool {
-    if (vm_instance == null) {
+    if (vm_instance != null) {
         vm_instance.?.load("temp.kl") catch |err| {
             std.log.err("error while compiling karel-lang: {}", .{err});
         };
@@ -66,7 +66,7 @@ export fn dump_loaded() callconv(.C) bool {
 export fn run_symbol(sym: [*c]const u8) bool {
     const sym_slice: [:0]const u8 = std.mem.span(sym);
 
-    if (vm_instance == null) {
+    if (vm_instance != null) {
         var startTime = std.time.nanoTimestamp();
 
         const func_count = vm_instance.?.run_symbol(sym_slice) catch |err| {
