@@ -1,9 +1,9 @@
 # Kvm
 Kvm (Karel Virtual Machine) is a blazingly fast interpreter for the Robot Karel language written in zig.
 
-Currently Kvm doesn't yet support loading and compiling code. Only a demo bytecode is preloaded at startup and executed.
+Kvm is only a bare compiler + interpreter library, to use it beyond just loading a karel-lang file and executing one function, see projects that incorporate Kvm like [PyKarel](https://github.com/C2Coder/PyKarel99) by [@C2Coder](https://github.com/C2Coder/).
 
-# Building
+## Building
 You need to download the newest zig compiler. (currently 0.11.0)
 
 To clone and build:
@@ -18,7 +18,9 @@ After the build completes, to run the demo:
 ./zig-out/bin/Kvm
 ```
 
-## Debug
+Or use it in your projects using the dynamic library (with a C api) in `./zig-out/lib/`
+
+### Debug
 To profile your Karel code or to debug the Vm build with `-Doptimize=Debug`
 ```sh
 zig build -Doptimize=Debug
