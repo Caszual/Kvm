@@ -35,8 +35,10 @@ export fn deinit() callconv(.C) void {
 }
 
 export fn load() callconv(.C) bool {
-    if (vm_instance) |vm| {
-        _ = vm;
+    if (vm_instance == null) {
+        vm_instance.?.load("temp.kl") catch |err| {
+            std.log.err("error while compiling karel-lang: {}", .{err});
+        };
 
         return true;
     } else return false;
