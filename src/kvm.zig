@@ -93,14 +93,16 @@ pub const Kvm = struct {
     bcode: std.ArrayList(u8),
     symbol_map: std.StringHashMap(bc.Func),
 
-    pub fn init(allocator: std.mem.Allocator, path: []const u8) !Kvm {
+    // load state
+    bcode_valid: bool = false,
+    world_valid: bool = false,
+
+    pub fn init(allocator: std.mem.Allocator) !Kvm {
         var vm = Kvm{
             .allocator = allocator,
             .bcode = std.ArrayList(u8).init(allocator),
             .symbol_map = std.StringHashMap(bc.Func).init(allocator),
         };
-
-        try vm.load(path);
 
         return vm;
     }
@@ -125,6 +127,10 @@ pub const Kvm = struct {
 
         try comp.compileFile(path, self.allocator, &self.bcode, &self.symbol_map);
 
+        self.bcode_valid = true;
+    }
+
+    pub fn load_world(self: *Kvm) void {
         self.karel = Karel{
             .home_x = 0,
             .home_y = 0,
@@ -146,6 +152,8 @@ pub const Kvm = struct {
         //
         //const bytes_written = try file.writeAll(self.bcode.items);
         //_ = bytes_written;
+
+        self.world_valid = true;
     }
 
     // symbols
@@ -174,6 +182,8 @@ pub const Kvm = struct {
     // funcs
 
     fn run_func(self: *Kvm, func_entry: bc.Func) !u64 {
+        if (!(self.bcode_valid and self.world_valid)) return error.KvmNotStateNotValid;
+
         // ordered from cold to hot vars
 
         // represents the function call (and repeat) stack for retn (and repeat stacks)
