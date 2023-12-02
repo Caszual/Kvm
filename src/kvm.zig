@@ -15,28 +15,44 @@ const Karel = struct {
     dir: u2,
 
     // checks and simulates a step and returns it
-    pub fn get_step(self: *const Karel, map_size: u32) ?struct { x: u32, y: u32 } {
-        switch (self.dir) {
-            0 => {
-                if (self.pos_y + 1 == map_size) return null;
-                return .{ .x = self.pos_x, .y = self.pos_y + 1 };
-            },
+    pub fn get_step(self: *const Karel, comptime map_size: u32) ?struct { x: u32, y: u32 } {
+        //switch (self.dir) {
+        //    0 => {
+        //        if (self.pos_y + 1 == map_size) return null;
+        //        return .{ .x = self.pos_x, .y = self.pos_y + 1 };
+        //    },
+        //
+        //    1 => {
+        //        if (self.pos_x == 0) return null;
+        //        return .{ .x = self.pos_x - 1, .y = self.pos_y };
+        //    },
+        //
+        //    2 => {
+        //        if (self.pos_y == 0) return null;
+        //        return .{ .x = self.pos_x, .y = self.pos_y - 1 };
+        //    },
+        //
+        //    3 => {
+        //        if (self.pos_x + 1 == map_size) return null;
+        //        return .{ .x = self.pos_x + 1, .y = self.pos_y };
+        //    },
+        //}
 
-            1 => {
-                if (self.pos_x == 0) return null;
-                return .{ .x = self.pos_x - 1, .y = self.pos_y };
-            },
+        // optimized for modern processors with extensive pipelines (hopefully allows for less branch misses and mainly less pipeline flushes)
+        // the above switch is (at least should be) equivalent to the following
 
-            2 => {
-                if (self.pos_y == 0) return null;
-                return .{ .x = self.pos_x, .y = self.pos_y - 1 };
-            },
+        const is_even = self.dir % 2; // used to figure out the plane (x axis or y axis)
+        const dir = self.dir >> 1; // efficient hack to skip the required cmp instruction (saving costly pipeline flushes), figures out if it should increment or decrement along the axis
 
-            3 => {
-                if (self.pos_x + 1 == map_size) return null;
-                return .{ .x = self.pos_x + 1, .y = self.pos_y };
-            },
-        }
+        if ((is_even == 1 and self.pos_x == (map_size - 1) * (dir)) or
+            (is_even == 0 and self.pos_y == (map_size - 1) * (1 - dir))) return null;
+
+        const offset: i3 = (1 - @as(i3, dir) * 2); // precompute the offset
+
+        return .{
+            .x = @intCast(@as(i33, self.pos_x) + -offset * (is_even)),
+            .y = @intCast(@as(i33, self.pos_y) + offset * (1 - is_even)),
+        };
     }
 };
 
@@ -78,7 +94,7 @@ const City = struct {
 };
 
 const LookupSymbolError = error{SymbolNotFound};
-const RunFuncError = error{ StepOutOfBounds, PickupZeroFlags, PlaceMaxFlags, StopEncoutered };
+const RunFuncError = error{ StepOutOfBounds, PickupZeroFlags, PlaceMaxFlags, StopEncountered };
 
 pub const Kvm = struct {
     // Kvm is tuned for fast and efficient execution until you reach this max function depth limit, where it falls back to allocating more stack at runtime
@@ -182,7 +198,7 @@ pub const Kvm = struct {
     // funcs
 
     fn run_func(self: *Kvm, func_entry: bc.Func) !u64 {
-        if (!(self.bcode_valid and self.world_valid)) return error.KvmNotStateNotValid;
+        if (!(self.bcode_valid and self.world_valid)) return error.KvmStateNotValid;
 
         // ordered from cold to hot vars
 
@@ -364,7 +380,7 @@ pub const Kvm = struct {
 
                 bc.KvmOpCode.stop => {
                     std.log.debug("stop: final", .{});
-                    return RunFuncError.StopEncoutered;
+                    return RunFuncError.StopEncountered;
                 },
             }
 
@@ -383,7 +399,7 @@ pub const Kvm = struct {
             bc.KvmCondition.is_wall => {
                 const step = self.karel.get_step(City.map_size);
 
-                result = if (step) |s| self.city.get_square(s.x, s.y) == 9 else false;
+                result = if (step) |s| self.city.get_square(s.x, s.y) == 9 else true;
             },
 
             bc.KvmCondition.is_flag => {
