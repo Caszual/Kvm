@@ -83,13 +83,13 @@ const City = struct {
     pub fn get_square(self: *const City, x: u32, y: u32) u4 {
         const data = self.storage[(x + y * map_size) / 2];
 
-        return if (x % 2 == 0) data.s1 else data.s2;
+        return if (x % 2 == 1) data.s2 else data.s1;
     }
 
     pub fn set_square(self: *City, x: u32, y: u32, data: u4) void {
         const stored_data: *CityByte = &self.storage[(x + y * map_size) / 2];
 
-        if (x % 2 == 0) stored_data.s1 = data else stored_data.s2 = data;
+        if (x % 2 == 1) stored_data.s2 = data else stored_data.s1 = data;
     }
 };
 
