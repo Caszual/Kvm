@@ -60,7 +60,7 @@ const City = struct {
     pub const max_flags = 8; // max flags on a single square
     pub const map_size = 20; // city size, kvm only supports square maps, must be a multiple of 2
 
-    // 4 bits per square, 0 to 8 is a non-wall square with that number of flags, 9 is a wall
+    // 4 bits per square, 0 to 8 is a non-wall square with that number of flags, ~0 (bitwise not) is a wall
     const CityByte = packed struct { s1: u4, s2: u4 };
 
     storage: [map_size * map_size / 2]CityByte,
@@ -228,17 +228,16 @@ pub const Kvm = struct {
             const opcode: bc.KvmByte = @bitCast(self.bcode.items[func]);
 
             func_count += 1;
-            if (func_count == 0xffffffff) return func_count;
 
             switch (opcode.opcode) {
                 bc.KvmOpCode.step => {
                     const step = self.karel.get_step(City.map_size);
 
-                    if (step) |s| {
-                        self.karel.pos_x = s.x;
-                        self.karel.pos_y = s.y;
+                    if (if (step) |s| ~self.city.get_square(s.x, s.y) != 0 else false) {
+                        self.karel.pos_x = step.?.x;
+                        self.karel.pos_y = step.?.y;
 
-                        std.log.debug("step: {} {} {}", .{ s.x, s.y, self.karel.dir });
+                        std.log.debug("step: {} {} {}", .{ step.?.x, step.?.y, self.karel.dir });
                     } else {
                         return RunFuncError.StepOutOfBounds;
                     }
@@ -297,10 +296,7 @@ pub const Kvm = struct {
                         func_depth += 1;
                     }
 
-                    // repeat instruction is at the *bottom* of the loop (pointing to the top)
-                    repeat_state.? -= 1;
-
-                    if (repeat_state == 0) {
+                    if (repeat_state == 1) {
                         // finished loop
 
                         if (repeat_stack.items.len != 0) {
@@ -319,49 +315,54 @@ pub const Kvm = struct {
                         func_depth -= 1;
 
                         std.log.debug("repeat: finished", .{});
-                    } else {
-                        // continue looping
-                        const repeat_func = bc.get_repeat_func(self.bcode.items[func .. func + 7]);
-
-                        func = repeat_func;
-                        std.log.debug("repeat: {} 0x{x}", .{ repeat_state.?, repeat_func });
+                        continue;
                     }
+
+                    // repeat instruction is at the *bottom* of the loop (pointing to the top)
+                    repeat_state.? -= 1;
+
+                    // continue looping
+                    const repeat_func = bc.get_repeat_func(self.bcode.items[func .. func + 7]);
+
+                    func = repeat_func;
+                    std.log.debug("repeat: {} 0x{x}", .{ repeat_state.?, repeat_func });
                 },
 
                 bc.KvmOpCode.branch => {
-                    const cond = self.test_cond(opcode);
+                    // inlining actually hurts performance here because it bloats the switch block in an otherwise *hot* tight switch loop
+                    const cond = @call(.never_inline, Kvm.test_cond, .{ self, opcode });
+                    // const cond = self.test_cond(opcode);
 
                     if (cond == false) {
                         func += 5;
 
                         std.log.debug("branch: unmet", .{});
-                        continue;
+                        // continue;
+                    } else {
+                        func = bc.get_branch_func(self.bcode.items[func .. func + 5]);
+
+                        std.log.debug("branch: 0x{x}", .{func});
                     }
-
-                    const br_func = bc.get_branch_func(self.bcode.items[func .. func + 5]);
-                    func = br_func;
-
-                    std.log.debug("branch: 0x{x}", .{br_func});
                 },
 
                 bc.KvmOpCode.branch_linked => {
-                    const cond = self.test_cond(opcode);
-
-                    if (cond == false) {
-                        func += 5;
-
-                        std.log.debug("branch_linked: unmet", .{});
-                        continue;
-                    }
-
-                    const br_func = bc.get_branch_func(self.bcode.items[func .. func + 5]);
-
-                    func_stack.appendAssumeCapacity(func + 5);
-                    func = br_func;
+                    // linked branches are only used for symbol calls, which don't support conditions in vanilla karel-lang
+                    //
+                    // const cond = self.test_cond(opcode);
+                    //
+                    // if (cond == false) {
+                    //     func += 5;
+                    //
+                    //     std.log.debug("branch_linked: unmet", .{});
+                    //     continue;
+                    // }
 
                     func_depth += 1;
 
-                    std.log.debug("branch_linked: 0x{x}", .{br_func});
+                    func_stack.appendAssumeCapacity(func + 5);
+                    func = bc.get_branch_func(self.bcode.items[func .. func + 5]);
+
+                    std.log.debug("branch_linked: 0x{x}", .{func});
                 },
 
                 bc.KvmOpCode.retn => {
@@ -369,13 +370,13 @@ pub const Kvm = struct {
 
                     func_depth -= 1;
 
-                    if (ret_func) |f| {
-                        func = f; // return from linked call
-                        std.log.debug("retn: 0x{x}", .{f});
-                    } else {
+                    if (ret_func == null) {
                         std.log.debug("retn: final", .{});
                         return func_count; // end of root function
                     }
+
+                    func = ret_func.?; // return from linked call
+                    std.log.debug("retn: 0x{x}", .{ret_func.?});
                 },
 
                 bc.KvmOpCode.stop => {
@@ -399,7 +400,7 @@ pub const Kvm = struct {
             bc.KvmCondition.is_wall => {
                 const step = self.karel.get_step(City.map_size);
 
-                result = if (step) |s| self.city.get_square(s.x, s.y) == 9 else true;
+                result = if (step) |s| ~self.city.get_square(s.x, s.y) == 0 else true;
             },
 
             bc.KvmCondition.is_flag => {
@@ -435,7 +436,7 @@ pub const Kvm = struct {
     }
 
     fn fallbackAllocations(fstack: *std.ArrayList(bc.Func), rstack: *std.ArrayList(u16)) !void {
-        @setCold(true); // tell the optimizer to banish this function from being chosen as a function that is called often
+        @setCold(true); // tell the optimizer to banish this function from being viewed as a function that is called often
 
         try fstack.ensureUnusedCapacity(16);
         try rstack.ensureUnusedCapacity(16);
