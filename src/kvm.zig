@@ -81,15 +81,24 @@ const City = struct {
     // Warning: accessing out of bound is Undefined Behaviour
 
     pub fn get_square(self: *const City, x: u32, y: u32) u4 {
-        const data = self.storage[(x + y * map_size) / 2];
+        const data: u8 = @bitCast(self.storage[(x + y * map_size) / 2]);
 
-        return if (x % 2 == 1) data.s2 else data.s1;
+        // return if (x % 2 == 1) data.s2 else data.s1;
+
+        // equivalent to the code above but solved using bitwise shifting instead of branching
+        return @intCast((data >> @as(u3, @intCast(x % 2)) * 4) & 0x0f);
     }
 
     pub fn set_square(self: *City, x: u32, y: u32, data: u4) void {
-        const stored_data: *CityByte = &self.storage[(x + y * map_size) / 2];
+        const stored_data: *CityByte = @ptrCast(&self.storage[(x + y * map_size) / 2]);
 
+        // here the branching method is actually faster then the bitwise method, this is why you always test every change you make
         if (x % 2 == 1) stored_data.s2 = data else stored_data.s1 = data;
+
+        // const mask: u8 = @as(u8, 0x0f) << @as(u3, @intCast(x % 2)) * 4;
+        //
+        // stored_data.* &= ~mask;
+        // stored_data.* |= data & mask;
     }
 };
 
@@ -293,7 +302,7 @@ pub const Kvm = struct {
                         repeat_origin = func;
                         repeat_state = bc.get_repeat_index(self.bcode.items[func .. func + 7]);
 
-                        func_depth += 1;
+                        try incrementDepth(&func_depth, &func_stack, &repeat_stack);
                     }
 
                     if (repeat_state == 1) {
@@ -329,9 +338,8 @@ pub const Kvm = struct {
                 },
 
                 bc.KvmOpCode.branch => {
-                    // inlining actually hurts performance here because it bloats the switch block in an otherwise *hot* tight switch loop
-                    const cond = @call(.never_inline, Kvm.test_cond, .{ self, opcode });
-                    // const cond = self.test_cond(opcode);
+                    // const cond = @call(.never_inline, Kvm.test_cond, .{ self, opcode });
+                    const cond = self.test_cond(opcode);
 
                     if (cond == false) {
                         func += 5;
@@ -357,7 +365,7 @@ pub const Kvm = struct {
                     //     continue;
                     // }
 
-                    func_depth += 1;
+                    try incrementDepth(&func_depth, &func_stack, &repeat_stack);
 
                     func_stack.appendAssumeCapacity(func + 5);
                     func = bc.get_branch_func(self.bcode.items[func .. func + 5]);
@@ -384,9 +392,6 @@ pub const Kvm = struct {
                     return RunFuncError.StopEncountered;
                 },
             }
-
-            // fallback runtime allocation when the maxFastDepth is reached, *will* affect performance
-            if (func_depth > Kvm.maxFastDepth) try fallbackAllocations(&func_stack, &repeat_stack);
         }
 
         unreachable;
@@ -433,6 +438,11 @@ pub const Kvm = struct {
         }
 
         return result != opcode.cond_inverse; // effectivelly a xor
+    }
+
+    inline fn incrementDepth(depth: *u32, fstack: *std.ArrayList(bc.Func), rstack: *std.ArrayList(u16)) !void {
+        depth.* += 1;
+        if (depth.* > Kvm.maxFastDepth) try fallbackAllocations(fstack, rstack);
     }
 
     fn fallbackAllocations(fstack: *std.ArrayList(bc.Func), rstack: *std.ArrayList(u16)) !void {
