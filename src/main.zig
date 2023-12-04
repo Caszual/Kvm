@@ -55,9 +55,10 @@ export fn deinit() callconv(.C) void {
 }
 
 // (re)loads new karel-lang file into memory
-export fn load() callconv(.C) KvmResult {
+export fn load(file_path_arg: [*c]const u8) callconv(.C) KvmResult {
+    const file_path: []const u8 = std.mem.span(file_path_arg);
     if (vm_instance != null) {
-        vm_instance.?.load("temp.kl") catch |err| {
+        vm_instance.?.load(file_path) catch |err| {
             std.log.err("error while compiling karel-lang: {}", .{err});
 
             return switch (err) {
@@ -76,6 +77,9 @@ export fn load() callconv(.C) KvmResult {
 // TODO: world load
 // (re)loads Karel's and Cities state into memory
 export fn load_world() callconv(.C) KvmResult {
+    vm_instance.?.load_world();
+    return .success
+    
     if (vm_instance) |vm| {
         _ = vm;
         // vm.setKarel();
