@@ -77,10 +77,9 @@ export fn load(file_path_arg: [*c]const u8) callconv(.C) KvmResult {
 // TODO: world load
 // (re)loads Karel's and Cities state into memory
 export fn load_world() callconv(.C) KvmResult {
-    vm_instance.?.load_world();
-    return .success
     
     if (vm_instance) |vm| {
+        vm_instance.?.load_world();
         _ = vm;
         // vm.setKarel();
         // vm.setCity();
