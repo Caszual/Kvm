@@ -2,6 +2,21 @@ const std = @import("std");
 const bc = @import("kvm-bcode.zig");
 const comp = @import("kvm-compiler.zig");
 
+pub const KvmResult = enum(c_int) {
+    success = 0,
+    in_progress,
+    unknown_error, // used for system errors like out of memory, when unknown_error is returned as result the actual error will be printed to the teminal
+    not_initialized, // unless in init(), then equals to .already_initialized
+    file_not_found,
+    compilation_error, // error will be printed to the terminal also
+    state_not_valid,
+    symbol_not_found,
+    step_out_of_bounds,
+    pickup_zero_flags,
+    place_max_flags,
+    stop_encountered,
+};
+
 const Karel = struct {
     // home position on the map, (0, 0) is bottom-left
     home_x: u32,
@@ -70,7 +85,8 @@ const City = struct {
 
         const byte_size = @min(map_size / 2, loaded_size / 2);
         var i: u32 = 0;
-        while (i < byte_size) : (i += 1) {
+
+        while (i < byte_size * byte_size) : (i += byte_size) {
             @memcpy(c.storage[i .. i + byte_size], @as([]const CityByte, @ptrCast(loaded_data))[i .. i + byte_size]); // note: zig is angry without the prtCast because of different ABI sizes
         }
 
@@ -108,6 +124,7 @@ const RunFuncError = error{ StepOutOfBounds, PickupZeroFlags, PlaceMaxFlags, Sto
 pub const Kvm = struct {
     // Kvm is tuned for fast and efficient execution until you reach this max function depth limit, where it falls back to allocating more stack at runtime
     pub const maxFastDepth = 512;
+    pub const map_size = City.map_size;
 
     allocator: std.mem.Allocator,
 
@@ -122,11 +139,18 @@ pub const Kvm = struct {
     bcode_valid: bool = false,
     world_valid: bool = false,
 
+    // comunicates the interpreter status back to the main thread
+    inter_status: std.atomic.Atomic(KvmResult),
+
+    // used by main thread to stop the interpreter thread, see run_func()
+    interupt_short: u1 = 1,
+
     pub fn init(allocator: std.mem.Allocator) !Kvm {
         var vm = Kvm{
             .allocator = allocator,
             .bcode = std.ArrayList(u8).init(allocator),
             .symbol_map = std.StringHashMap(bc.Func).init(allocator),
+            .inter_status = std.atomic.Atomic(KvmResult).init(.success),
         };
 
         return vm;
@@ -147,6 +171,8 @@ pub const Kvm = struct {
     }
 
     pub fn load(self: *Kvm, path: []const u8) !void {
+        if (self.inter_status.load(std.builtin.AtomicOrder.Acquire) == .in_progress) return error.InProgress;
+
         self.bcode.clearRetainingCapacity();
         self.symbol_map.clearRetainingCapacity();
 
@@ -155,7 +181,9 @@ pub const Kvm = struct {
         self.bcode_valid = true;
     }
 
-    pub fn load_world(self: *Kvm) void {
+    pub fn load_world(self: *Kvm) !void {
+        if (self.inter_status.load(std.builtin.AtomicOrder.Acquire) == .in_progress) return error.InProgress;
+
         self.karel = Karel{
             .home_x = 0,
             .home_y = 0,
@@ -167,27 +195,25 @@ pub const Kvm = struct {
         // clear map
         self.city = City{ .storage = undefined };
 
-        //@memset(&self.city.storage, .{ .s1 = 0, .s2 = 0 });
-        //
-        //const file = try std.fs.cwd().createFile(
-        //    "bcode.bin",
-        //    .{ .read = false },
-        //);
-        //defer file.close();
-        //
-        //const bytes_written = try file.writeAll(self.bcode.items);
-        //_ = bytes_written;
+        @memset(&self.city.storage, .{ .s1 = 0, .s2 = 0 });
 
         self.world_valid = true;
     }
 
     // symbols
 
-    pub fn run_symbol(self: *Kvm, symbol: bc.Symbol) !u64 {
+    pub fn run_symbol(self: *Kvm, symbol: bc.Symbol) !void {
+        if (self.inter_status.load(std.builtin.AtomicOrder.Acquire) == .in_progress) return error.InProgress;
+
         const func = self.lookup_symbol(symbol);
         if (func == null) return error.SymbolNotFound;
 
-        return try self.run_func(func.?);
+        self.inter_status.store(.in_progress, std.builtin.AtomicOrder.Release);
+        self.interupt_short = 1;
+
+        const t = try std.Thread.spawn(.{}, run_func, .{ self, func.? });
+
+        t.detach();
     }
 
     pub fn dump_loaded_symbols(self: *const Kvm) void {
@@ -204,9 +230,31 @@ pub const Kvm = struct {
         return self.symbol_map.get(symbol);
     }
 
-    // funcs
+    pub fn short_circuit(self: *Kvm) void {
+        self.interupt_short = 0;
+    }
 
-    fn run_func(self: *Kvm, func_entry: bc.Func) !u64 {
+    pub fn read_world(self: *const Kvm, buf: []u8) !void {
+        if (self.world_valid) {
+            var x: u32 = 0;
+            while (x < City.map_size) : (x += 1) {
+                var y: u32 = 0;
+                while (y < City.map_size) : (y += 1) {
+                    const val: u8 = @as(u8, self.city.get_square(x, y));
+
+                    if (val == ~@as(u4, 0)) {
+                        buf[x + y * City.map_size] = 255;
+                    } else {
+                        buf[x + y * City.map_size] = val;
+                    }
+                }
+            }
+        } else return error.KvmStateNotValid;
+    }
+
+    // interpreter (inter thread)
+
+    fn run_func(self: *Kvm, func_entry: bc.Func) !void {
         if (!(self.bcode_valid and self.world_valid)) return error.KvmStateNotValid;
 
         // ordered from cold to hot vars
@@ -225,8 +273,6 @@ pub const Kvm = struct {
         var repeat_state: ?u16 = null;
         var repeat_origin: ?bc.Func = null;
 
-        var func_count: u64 = 0;
-
         // essentially Karel's program counter
         var func: bc.Func = func_entry;
 
@@ -234,9 +280,9 @@ pub const Kvm = struct {
 
         // entering hot loop
         while (true) {
-            const opcode: bc.KvmByte = @bitCast(self.bcode.items[func]);
-
-            func_count += 1;
+            // reading the next opcode
+            // multiplying by interupt_short to redirect the bcode execution to 0x0 if an interupt was triggered by main thread
+            const opcode: bc.KvmByte = @bitCast(self.bcode.items[func * self.interupt_short]);
 
             switch (opcode.opcode) {
                 bc.KvmOpCode.step => {
@@ -248,7 +294,8 @@ pub const Kvm = struct {
 
                         std.log.debug("step: {} {} {}", .{ step.?.x, step.?.y, self.karel.dir });
                     } else {
-                        return RunFuncError.StepOutOfBounds;
+                        self.inter_status.store(.step_out_of_bounds, std.builtin.AtomicOrder.Release);
+                        return;
                     }
 
                     func += 1;
@@ -269,7 +316,8 @@ pub const Kvm = struct {
 
                         std.log.debug("pick_up: {}", .{tags - 1});
                     } else {
-                        return RunFuncError.PickupZeroFlags;
+                        self.inter_status.store(.pickup_zero_flags, std.builtin.AtomicOrder.Release);
+                        return;
                     }
 
                     func += 1;
@@ -283,7 +331,8 @@ pub const Kvm = struct {
 
                         std.log.debug("place: {}", .{tags + 1});
                     } else {
-                        return RunFuncError.PlaceMaxFlags;
+                        self.inter_status.store(.place_max_flags, std.builtin.AtomicOrder.Release);
+                        return;
                     }
 
                     func += 1;
@@ -380,7 +429,9 @@ pub const Kvm = struct {
 
                     if (ret_func == null) {
                         std.log.debug("retn: final", .{});
-                        return func_count; // end of root function
+
+                        self.inter_status.store(.success, std.builtin.AtomicOrder.Release);
+                        return; // end of root function
                     }
 
                     func = ret_func.?; // return from linked call
@@ -389,7 +440,9 @@ pub const Kvm = struct {
 
                 bc.KvmOpCode.stop => {
                     std.log.debug("stop: final", .{});
-                    return RunFuncError.StopEncountered;
+
+                    self.inter_status.store(.stop_encountered, std.builtin.AtomicOrder.Release);
+                    return;
                 },
             }
         }
