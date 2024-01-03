@@ -139,6 +139,8 @@ pub const Kvm = struct {
     bcode_valid: bool = false,
     world_valid: bool = false,
 
+    m: std.Thread.Mutex = std.Thread.Mutex{},
+
     // comunicates the interpreter status back to the main thread
     inter_status: std.atomic.Atomic(KvmResult),
 
@@ -157,6 +159,8 @@ pub const Kvm = struct {
     }
 
     pub fn deinit(self: *Kvm) void {
+        self.m.lock();
+
         self.bcode.deinit();
 
         //{
@@ -170,8 +174,23 @@ pub const Kvm = struct {
         //}
     }
 
-    pub fn load(self: *Kvm, path: []const u8) !void {
-        if (self.inter_status.load(std.builtin.AtomicOrder.Acquire) == .in_progress) return error.InProgress;
+    pub fn load(self: *Kvm, src: []const u8) !void {
+        self.m.lock();
+        defer self.m.unlock();
+
+        self.bcode.clearRetainingCapacity();
+        self.symbol_map.clearRetainingCapacity();
+
+        var src_stream = std.io.fixedBufferStream(src);
+
+        try comp.compile(src_stream.reader(), self.allocator, &self.bcode, &self.symbol_map);
+
+        self.bcode_valid = true;
+    }
+
+    pub fn load_file(self: *Kvm, path: []const u8) !void {
+        self.m.lock();
+        defer self.m.unlock();
 
         self.bcode.clearRetainingCapacity();
         self.symbol_map.clearRetainingCapacity();
@@ -181,8 +200,9 @@ pub const Kvm = struct {
         self.bcode_valid = true;
     }
 
-    pub fn load_world(self: *Kvm) !void {
-        if (self.inter_status.load(std.builtin.AtomicOrder.Acquire) == .in_progress) return error.InProgress;
+    pub fn load_world(self: *Kvm) void {
+        self.m.lock();
+        defer self.m.unlock();
 
         self.karel = Karel{
             .home_x = 0,
@@ -203,7 +223,8 @@ pub const Kvm = struct {
     // symbols
 
     pub fn run_symbol(self: *Kvm, symbol: bc.Symbol) !void {
-        if (self.inter_status.load(std.builtin.AtomicOrder.Acquire) == .in_progress) return error.InProgress;
+        self.m.lock();
+        defer self.m.unlock();
 
         const func = self.lookup_symbol(symbol);
         if (func == null) return error.SymbolNotFound;

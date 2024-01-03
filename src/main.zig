@@ -40,18 +40,39 @@ export fn deinit() callconv(.C) void {
     vm_instance.?.deinit();
 }
 
-// (re)loads new karel-lang file into memory
-export fn load(file_path_arg: [*c]const u8) callconv(.C) kvm.KvmResult {
-    const file_path: []const u8 = std.mem.span(file_path_arg);
+// (re)loads new karel-lang source into memory
+//
+// will block if interpreter running
+export fn load(src_arg: [*c]const u8) callconv(.C) kvm.KvmResult {
+    const src: []const u8 = std.mem.span(src_arg);
 
     if (vm_instance != null) {
-        vm_instance.?.load(file_path) catch |err| {
+        vm_instance.?.load(src) catch |err| {
+            std.log.err("error while compiling karel-lang: {}", .{err});
+
+            return switch (err) {
+                kvm_comp.CompilerError.UnknownCondition, kvm_comp.CompilerError.UnknownConditionPrefix, kvm_comp.CompilerError.RepeatCountInvalid, kvm_comp.CompilerError.RepeatCountTooBig => .compilation_error,
+
+                else => .unknown_error,
+            };
+        };
+
+        return .success;
+    } else return .not_initialized;
+}
+
+// (re)loads new karel-lang file into memory
+//
+// will block if interpreter running
+export fn load_file(path_arg: [*c]const u8) callconv(.C) kvm.KvmResult {
+    const path: []const u8 = std.mem.span(path_arg);
+
+    if (vm_instance != null) {
+        vm_instance.?.load_file(path) catch |err| {
             std.log.err("error while compiling karel-lang: {}", .{err});
 
             return switch (err) {
                 error.FileNotFound => .file_not_found,
-
-                error.InProgress => .in_progress,
 
                 kvm_comp.CompilerError.UnknownCondition, kvm_comp.CompilerError.UnknownConditionPrefix, kvm_comp.CompilerError.RepeatCountInvalid, kvm_comp.CompilerError.RepeatCountTooBig => .compilation_error,
 
@@ -65,13 +86,11 @@ export fn load(file_path_arg: [*c]const u8) callconv(.C) kvm.KvmResult {
 
 // TODO: world load
 // (re)loads Karel's and Cities state into memory
+//
+// will block if interpreter running
 export fn load_world() callconv(.C) kvm.KvmResult {
     if (vm_instance != null) {
-        vm_instance.?.load_world() catch |err| {
-            return switch (err) {
-                error.InProgress => .in_progress,
-            };
-        };
+        vm_instance.?.load_world();
 
         // vm.setKarel();
         // vm.setCity();
@@ -102,12 +121,15 @@ export fn read_world(cbuf: [*c]u8) callconv(.C) kvm.KvmResult {
 // this might create some race conditions (creating some inconsistencies in the read data) but i don't care!
 export fn read_karel(cbuf: [*c]u32) callconv(.C) kvm.KvmResult {
     if (vm_instance) |vm| {
-        var buf: []u32 = cbuf[0..3];
+        var buf: []u32 = cbuf[0..5];
 
         buf[0] = vm.karel.pos_x;
         buf[1] = vm.karel.pos_y;
 
         buf[2] = vm.karel.dir;
+
+        buf[3] = vm.karel.home_x;
+        buf[4] = vm.karel.home_y;
 
         return .success;
     } else return .not_initialized;
@@ -145,6 +167,7 @@ export fn dump_loaded() callconv(.C) kvm.KvmResult {
 // looks up and executes a symbol from the bcode in currently memory
 //
 // symbol arg *must* be a utf-8 encoded null terminated string
+// will block if interpreter running
 export fn run_symbol(sym: [*c]const u8) callconv(.C) kvm.KvmResult {
     const sym_slice: []const u8 = std.mem.span(sym);
 
@@ -168,7 +191,7 @@ pub fn main() !void {
 
     _ = init();
 
-    _ = load("test.kl");
+    _ = load_file("test.kl");
     _ = load_world();
 
     std.log.info("Kvm Successfully Initialized in {}!", .{std.fmt.fmtDuration(@as(u64, @intCast(std.time.nanoTimestamp() - startTime)))});
