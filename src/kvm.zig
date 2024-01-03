@@ -211,9 +211,12 @@ pub const Kvm = struct {
         self.inter_status.store(.in_progress, std.builtin.AtomicOrder.Release);
         self.interupt_short = 1;
 
-        const t = try std.Thread.spawn(.{}, run_func, .{ self, func.? });
+        // can't automatically multithread in shared library mode due to: https://github.com/ziglang/zig/issues/15336
+        // const t = try std.Thread.spawn(.{}, run_func, .{ self, func.? });
 
-        t.detach();
+        try self.run_func(func.?);
+
+        // t.detach();
     }
 
     pub fn dump_loaded_symbols(self: *const Kvm) void {

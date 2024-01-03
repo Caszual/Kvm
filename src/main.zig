@@ -43,6 +43,7 @@ export fn deinit() callconv(.C) void {
 // (re)loads new karel-lang file into memory
 export fn load(file_path_arg: [*c]const u8) callconv(.C) kvm.KvmResult {
     const file_path: []const u8 = std.mem.span(file_path_arg);
+
     if (vm_instance != null) {
         vm_instance.?.load(file_path) catch |err| {
             std.log.err("error while compiling karel-lang: {}", .{err});
@@ -151,14 +152,14 @@ export fn run_symbol(sym: [*c]const u8) callconv(.C) kvm.KvmResult {
         // var startTime = std.time.nanoTimestamp();
 
         vm_instance.?.run_symbol(sym_slice) catch |err| {
-            std.log.err("An error occurred while strting interpreter thread! error: {}", .{err});
+            std.log.err("An error occurred while interpreting karel bcode! error: {}", .{err});
 
             return .unknown_error;
         };
 
         // std.log.info("Karel's execution of {} funcs has finished in {}!", .{ func_count, std.fmt.fmtDuration(@as(u64, @intCast(std.time.nanoTimestamp() - startTime))) });
 
-        return .success;
+        return vm_instance.?.inter_status.load(std.builtin.AtomicOrder.Acquire);
     } else return .not_initialized;
 }
 
@@ -172,7 +173,7 @@ pub fn main() !void {
 
     std.log.info("Kvm Successfully Initialized in {}!", .{std.fmt.fmtDuration(@as(u64, @intCast(std.time.nanoTimestamp() - startTime)))});
 
-    _ = run_symbol("TEST");
+    _ = run_symbol("ROOT-ALIGN");
 
     startTime = std.time.nanoTimestamp();
 

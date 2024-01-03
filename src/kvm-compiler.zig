@@ -80,13 +80,13 @@ pub fn compile(reader: anytype, allocator: std.mem.Allocator, bytecode: *std.Arr
 
     // insert special kvm symbols
 
-    // null-func - MUST be at address 0x0; catches calling bcode at null funcs
+    // short-routine - MUST be at address 0x0; used for cross-thread short circuiting of the interpreter thread
     try bytecode.append(@bitCast(bc.KvmByte{ .opcode = .stop }));
 
     // noop-func - defined as at address 0x01; every empty symbol is pointing here
     try bytecode.append(@bitCast(bc.KvmByte{ .opcode = .retn }));
 
-    std.log.debug("null-func:", .{});
+    std.log.debug("short-routine:", .{});
     std.log.debug("  0x0: stop", .{});
     std.log.debug("noop-func:", .{});
     std.log.debug("  0x1: retn", .{});
