@@ -86,24 +86,31 @@ export fn load_file(path_arg: [*c]const u8) callconv(.C) kvm.KvmResult {
 
 // TODO: world load
 // (re)loads Karel's and Cities state into memory
+// buf contains an array of values that are between 0 to 8 (empty or flag) or equal to 255 (wall)
+// array is row-major and sized map_size * map_size
+//
+// k_buf contains karel_x, karel_y, dir (between 0 to 3), home_x, home_y in this order
 //
 // will block if interpreter running
-export fn load_world() callconv(.C) kvm.KvmResult {
+export fn load_world(buf_arg: [*c]const u8, k_buf_arg: [*c]const u32) callconv(.C) kvm.KvmResult {
     if (vm_instance != null) {
-        vm_instance.?.load_world();
+        const buf: []const u8 = buf_arg[0 .. kvm.Kvm.map_size * kvm.Kvm.map_size];
+        const k_buf: []const u32 = k_buf_arg[0..5];
 
-        // vm.setKarel();
-        // vm.setCity();
+        vm_instance.?.load_world(buf, k_buf);
 
         return .success;
     } else return .not_initialized;
 }
 
-// reads the current state of the world in memory
+// reads the current state of the city and karel in memory
 // this might create some race conditions if the interpreter is running (creating some inconsistencies in the read data) but i don't care!
-export fn read_world(cbuf: [*c]u8) callconv(.C) kvm.KvmResult {
+//
+// format identical to load_world
+export fn read_world(buf_arg: [*c]u8, k_buf_arg: [*c]u32) callconv(.C) kvm.KvmResult {
     if (vm_instance) |vm| {
-        var buf: []u8 = cbuf[0 .. kvm.Kvm.map_size * kvm.Kvm.map_size];
+        var buf: []u8 = buf_arg[0 .. kvm.Kvm.map_size * kvm.Kvm.map_size];
+        var k_buf: []u32 = k_buf_arg[0..5];
 
         vm.read_world(buf) catch |err| {
             return switch (err) {
@@ -113,23 +120,13 @@ export fn read_world(cbuf: [*c]u8) callconv(.C) kvm.KvmResult {
             };
         };
 
-        return .success;
-    } else return .not_initialized;
-}
+        k_buf[0] = vm.karel.pos_x;
+        k_buf[1] = vm.karel.pos_y;
 
-// reads the current state of Karel in memory
-// this might create some race conditions (creating some inconsistencies in the read data) but i don't care!
-export fn read_karel(cbuf: [*c]u32) callconv(.C) kvm.KvmResult {
-    if (vm_instance) |vm| {
-        var buf: []u32 = cbuf[0..5];
+        k_buf[2] = vm.karel.dir;
 
-        buf[0] = vm.karel.pos_x;
-        buf[1] = vm.karel.pos_y;
-
-        buf[2] = vm.karel.dir;
-
-        buf[3] = vm.karel.home_x;
-        buf[4] = vm.karel.home_y;
+        k_buf[3] = vm.karel.home_x;
+        k_buf[4] = vm.karel.home_y;
 
         return .success;
     } else return .not_initialized;
@@ -192,7 +189,13 @@ pub fn main() !void {
     _ = init();
 
     _ = load_file("test.kl");
-    _ = load_world();
+
+    var storage: [kvm.Kvm.map_size * kvm.Kvm.map_size / 2]u8 = undefined;
+    @memset(&storage, 0);
+
+    const karel: [5]u32 = [_]u32{ 0, 0, 0, 0, 0 };
+
+    _ = load_world(&storage, &karel);
 
     std.log.info("Kvm Successfully Initialized in {}!", .{std.fmt.fmtDuration(@as(u64, @intCast(std.time.nanoTimestamp() - startTime)))});
 

@@ -35,9 +35,9 @@ pub const KvmCondition = enum(u3) {
     is_flag,
     is_home,
     is_north,
-    is_east,
-    is_south,
     is_west,
+    is_south,
+    is_east,
 };
 
 pub const KvmByte = packed struct {

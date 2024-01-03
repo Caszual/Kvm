@@ -80,19 +80,6 @@ const City = struct {
 
     storage: [map_size * map_size / 2]CityByte,
 
-    pub fn init(loaded_data: []const u8, loaded_size: u32) City {
-        var c = City{ .storage = undefined };
-
-        const byte_size = @min(map_size / 2, loaded_size / 2);
-        var i: u32 = 0;
-
-        while (i < byte_size * byte_size) : (i += byte_size) {
-            @memcpy(c.storage[i .. i + byte_size], @as([]const CityByte, @ptrCast(loaded_data))[i .. i + byte_size]); // note: zig is angry without the prtCast because of different ABI sizes
-        }
-
-        return c;
-    }
-
     // storage accessors
     // Warning: accessing out of bound is Undefined Behaviour
 
@@ -200,22 +187,27 @@ pub const Kvm = struct {
         self.bcode_valid = true;
     }
 
-    pub fn load_world(self: *Kvm) void {
+    pub fn load_world(self: *Kvm, buf: []const u8, k_buf: []const u32) void {
         self.m.lock();
         defer self.m.unlock();
 
         self.karel = Karel{
-            .home_x = 0,
-            .home_y = 0,
-            .pos_x = 10,
-            .pos_y = 10,
-            .dir = 3,
+            .home_x = k_buf[3],
+            .home_y = k_buf[4],
+            .pos_x = k_buf[0],
+            .pos_y = k_buf[1],
+            .dir = @intCast(k_buf[2]),
         };
 
         // clear map
         self.city = City{ .storage = undefined };
 
-        @memset(&self.city.storage, .{ .s1 = 0, .s2 = 0 });
+        for (buf, 0..) |square, i| {
+            const stored_data: *City.CityByte = @ptrCast(&self.city.storage[i / 2]);
+            const data: u4 = if (square != 255) @intCast(square) else ~@as(u4, 0);
+
+            if (i % 2 == 1) stored_data.s2 = data else stored_data.s1 = data;
+        }
 
         self.world_valid = true;
     }
@@ -497,7 +489,7 @@ pub const Kvm = struct {
                 result = self.karel.dir == 0;
             },
 
-            bc.KvmCondition.is_east => {
+            bc.KvmCondition.is_west => {
                 result = self.karel.dir == 1;
             },
 
@@ -505,7 +497,7 @@ pub const Kvm = struct {
                 result = self.karel.dir == 2;
             },
 
-            bc.KvmCondition.is_west => {
+            bc.KvmCondition.is_east => {
                 result = self.karel.dir == 3;
             },
 
